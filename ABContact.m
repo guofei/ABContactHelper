@@ -366,6 +366,7 @@
 	for (int i = 0; i < ABMultiValueGetCount(theProperty); i++)
 	{
 		NSString *label = (NSString *)ABMultiValueCopyLabelAtIndex(theProperty, i);
+		if (label == nil) continue;
 		[labels addObject:label];
 		[label release];
 	}
@@ -643,13 +644,20 @@
 	if (self.creationDate) [dict setObject:self.creationDate forKey:CREATION_DATE_STRING];
 	if (self.modificationDate) [dict setObject:self.modificationDate forKey:MODIFICATION_DATE_STRING];
 
-	[dict setObject:self.emailDictionaries forKey:EMAIL_STRING];
-	[dict setObject:self.addressDictionaries forKey:ADDRESS_STRING];
-	[dict setObject:self.dateDictionaries forKey:DATE_STRING];
-	[dict setObject:self.phoneDictionaries forKey:PHONE_STRING];
-	[dict setObject:self.smsDictionaries forKey:SMS_STRING];
-	[dict setObject:self.urlDictionaries forKey:URL_STRING];
-	[dict setObject:self.relatedNameDictionaries forKey:RELATED_STRING];
+	if (self.emailDictionaries != nil)
+		[dict setObject:self.emailDictionaries forKey:EMAIL_STRING];
+	if (self.addressDictionaries != nil)
+		[dict setObject:self.addressDictionaries forKey:ADDRESS_STRING];
+	if (self.dateDictionaries != nil)
+		[dict setObject:self.dateDictionaries forKey:DATE_STRING];
+	if (self.phoneDictionaries != nil)
+		[dict setObject:self.phoneDictionaries forKey:PHONE_STRING];
+	if (self.smsDictionaries != nil)
+		[dict setObject:self.smsDictionaries forKey:SMS_STRING];
+	if (self.urlDictionaries != nil)
+		[dict setObject:self.urlDictionaries forKey:URL_STRING];
+	if (self.relatedNameDictionaries != nil)
+		[dict setObject:self.relatedNameDictionaries forKey:RELATED_STRING];
 	
 	return dict;
 }
@@ -664,6 +672,31 @@
 		[dict setObject:(NSData *)imageData forKey:IMAGE_STRING];
 		CFRelease(imageData);
 	}
+	return dict;
+}
+
+- (NSDictionary *) searchDictionaryRepresentation
+{
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+	[dict setObject:[NSString stringWithFormat:@"%d", self.recordID] forKey:@"recordID"];
+
+	if (self.firstname) [dict setObject:self.firstname forKey:FIRST_NAME_STRING];
+	if (self.middlename) [dict setObject:self.middlename forKey:MIDDLE_NAME_STRING];
+	if (self.lastname) [dict setObject:self.lastname forKey:LAST_NAME_STRING];
+	
+	if (self.prefix) [dict setObject:self.prefix forKey:PREFIX_STRING];
+	if (self.suffix) [dict setObject:self.suffix forKey:SUFFIX_STRING];
+	if (self.nickname) [dict setObject:self.nickname forKey:NICKNAME_STRING];
+	
+	if (self.organization) [dict setObject:self.organization forKey:ORGANIZATION_STRING];
+	if (self.jobtitle) [dict setObject:self.jobtitle forKey:JOBTITLE_STRING];
+	if (self.department) [dict setObject:self.department forKey:DEPARTMENT_STRING];
+	
+	if (self.note) [dict setObject:self.note forKey:NOTE_STRING];
+	
+	if (self.phoneArray != nil)
+		[dict setObject:[self.phoneArray componentsJoinedByString:@"|"] forKey:PHONE_STRING];
+	
 	return dict;
 }
 
