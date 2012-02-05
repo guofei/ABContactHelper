@@ -695,7 +695,9 @@
 	if (self.note) [dict setObject:self.note forKey:NOTE_STRING];
 	
 	if (self.phoneArray != nil)
-		[dict setObject:[self.phoneArray componentsJoinedByString:@"|"] forKey:PHONE_STRING];
+		[dict setObject:[[[[[[self.phoneArray componentsJoinedByString:@"|"] mutableCopy] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"(" withString:@""] stringByReplacingOccurrencesOfString:@")" withString:@""] stringByReplacingOccurrencesOfString:@"-" withString:@""] forKey:PHONE_STRING];
+	if (self.emailDictionaries != nil)
+		[dict setObject:[self.emailDictionaries componentsJoinedByString:@"|"] forKey:EMAIL_STRING];
 	
 	return dict;
 }
