@@ -60,7 +60,7 @@
 
 + (id) contactWithRecordID: (ABRecordID) recordID
 {
-	ABAddressBookRef addressBook = ABAddressBookCreate();
+	ABAddressBookRef addressBook = CFAutorelease(ABAddressBookCreate());
 	ABRecordRef contactrec = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
 	ABContact *contact = [self contactWithRecord:contactrec];
 	// CFRelease(contactrec); // Thanks Gary Fung
@@ -694,10 +694,19 @@
 	
 	if (self.note) [dict setObject:self.note forKey:NOTE_STRING];
 	
-	if (self.phoneArray != nil)
-		[dict setObject:[[[[[[self.phoneArray componentsJoinedByString:@"|"] mutableCopy] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"(" withString:@""] stringByReplacingOccurrencesOfString:@")" withString:@""] stringByReplacingOccurrencesOfString:@"-" withString:@""] forKey:PHONE_STRING];
-	if (self.emailDictionaries != nil)
-		[dict setObject:[self.emailDictionaries componentsJoinedByString:@"|"] forKey:EMAIL_STRING];
+	if (self.phoneArray != nil) {
+		NSString *phones = [self.phoneArray componentsJoinedByString:@"|"];
+		phones = [[[[phones stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"(" withString:@""] stringByReplacingOccurrencesOfString:@")" withString:@""] stringByReplacingOccurrencesOfString:@"-" withString:@""];
+		[dict setObject:phones forKey:PHONE_STRING];
+	}
+	if (self.emailArray != nil)
+		[dict setObject:[self.emailArray componentsJoinedByString:@"|"] forKey:EMAIL_STRING];
+	if (self.addressArray != nil)
+		[dict setObject:[self.addressArray componentsJoinedByString:@"|"] forKey:ADDRESS_STRING];
+	if (self.smsArray != nil)
+		[dict setObject:[self.smsArray componentsJoinedByString:@"|"] forKey:SMS_STRING];
+	if (self.urlArray != nil)
+		[dict setObject:self.urlArray forKey:URL_STRING];
 	
 	return dict;
 }
