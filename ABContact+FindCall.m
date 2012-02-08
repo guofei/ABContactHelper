@@ -52,19 +52,34 @@
 - (NSUInteger) numberOfMatchesForSearchTerm:(NSString *)searchText {
 	NSUInteger ret = 0;
 	
-	NSPredicate *filter = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", searchText];
-	
 	NSArray *allKeys = [self.searchDictionaryRepresentation allKeys];
 	NSArray *allValues = [self.searchDictionaryRepresentation allValues];
 	
+//	DLog(@"\nValues count = %d", [allValues count]);
+	
+	BOOL shouldSkipName = NO;
+	BOOL shouldSkipOrganization = NO;
+	
+	if (self.lastname == nil && self.firstname == nil ) {
+		shouldSkipOrganization = YES;
+	} else {
+		shouldSkipName = YES;
+	}
+
 	NSUInteger i = 0;
 	for (NSString *item in allValues) {
-		if ([[allKeys objectAtIndex:i] isEqualToString:FIRST_NAME_STRING]) continue;
-		if ([[allKeys objectAtIndex:i] isEqualToString:LAST_NAME_STRING]) continue;
-		if ([[allKeys objectAtIndex:i] isEqualToString:ORGANIZATION_STRING]) continue;
+//		DLog(@"\nLooking at %d. %@ = %@", i, [allKeys objectAtIndex:i], item);
 		
-		if ([filter evaluateWithObject:item])
+		if (shouldSkipName && [[allKeys objectAtIndex:i] isEqualToString:FIRST_NAME_STRING]) {i++;continue;}
+		if (shouldSkipName && [[allKeys objectAtIndex:i] isEqualToString:LAST_NAME_STRING]) {i++;continue;}
+		if (shouldSkipOrganization && [[allKeys objectAtIndex:i] isEqualToString:ORGANIZATION_STRING]) {i++;continue;}
+		
+		if ([item rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound) {
+//			DLog(@"\nFound!");
 			ret++;
+		}
+			
+		i++;
 	}
 	
 	return ret;
