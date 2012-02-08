@@ -110,7 +110,6 @@
 // Conversion to dictionary
 - (NSDictionary *) baseDictionaryRepresentation; // no image
 - (NSDictionary *) dictionaryRepresentation; // image where available
-- (NSDictionary *) searchDictionaryRepresentation; // no image, all strings
 
 // Conversion to data
 - (NSData *) baseDataRepresentation; // no image

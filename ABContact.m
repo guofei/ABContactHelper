@@ -6,44 +6,9 @@
 
 #import "ABContact.h"
 #import "ABContactsHelper.h"
+#import "ABContactStringConstants.h"
 
 #define CFAutorelease(obj) ({CFTypeRef _obj = (obj); (_obj == NULL) ? NULL : [(id)CFMakeCollectable(_obj) autorelease]; })
-
-#define FIRST_NAME_STRING	@"First Name"
-#define MIDDLE_NAME_STRING	@"Middle Name"
-#define LAST_NAME_STRING	@"Last Name"
-
-#define PREFIX_STRING	@"Prefix"
-#define SUFFIX_STRING	@"Suffix"
-#define NICKNAME_STRING	@"Nickname"
-
-#define PHONETIC_FIRST_STRING	@"Phonetic First Name"
-#define PHONETIC_MIDDLE_STRING	@"Phonetic Middle Name"
-#define PHONETIC_LAST_STRING	@"Phonetic Last Name"
-
-#define ORGANIZATION_STRING	@"Organization"
-#define JOBTITLE_STRING		@"Job Title"
-#define DEPARTMENT_STRING	@"Department"
-
-#define NOTE_STRING	@"Note"
-
-#define BIRTHDAY_STRING				@"Birthday"
-#define CREATION_DATE_STRING		@"Creation Date"
-#define MODIFICATION_DATE_STRING	@"Modification Date"
-
-#define KIND_STRING	@"Kind"
-
-#define EMAIL_STRING	@"Email"
-#define ADDRESS_STRING	@"Address"
-#define DATE_STRING		@"Date"
-#define PHONE_STRING	@"Phone"
-#define SMS_STRING		@"Instant Message"
-#define URL_STRING		@"URL"
-#define RELATED_STRING	@"Related Name"
-
-#define IMAGE_STRING	@"Image"
-
-#define SOCIAL_STRING	@"Social Service"
 
 @implementation ABContact
 @synthesize record;
@@ -704,44 +669,6 @@
 		[dict setObject:(NSData *)imageData forKey:IMAGE_STRING];
 		CFRelease(imageData);
 	}
-	return dict;
-}
-
-- (NSDictionary *) searchDictionaryRepresentation
-{
-	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-	[dict setObject:[NSString stringWithFormat:@"%d", self.recordID] forKey:@"recordID"];
-
-	if (self.firstname) [dict setObject:self.firstname forKey:FIRST_NAME_STRING];
-	if (self.middlename) [dict setObject:self.middlename forKey:MIDDLE_NAME_STRING];
-	if (self.lastname) [dict setObject:self.lastname forKey:LAST_NAME_STRING];
-	
-	if (self.prefix) [dict setObject:self.prefix forKey:PREFIX_STRING];
-	if (self.suffix) [dict setObject:self.suffix forKey:SUFFIX_STRING];
-	if (self.nickname) [dict setObject:self.nickname forKey:NICKNAME_STRING];
-	
-	if (self.organization) [dict setObject:self.organization forKey:ORGANIZATION_STRING];
-	if (self.jobtitle) [dict setObject:self.jobtitle forKey:JOBTITLE_STRING];
-	if (self.department) [dict setObject:self.department forKey:DEPARTMENT_STRING];
-	
-	if (self.note) [dict setObject:self.note forKey:NOTE_STRING];
-	
-	if (self.phoneArray != nil) {
-		NSString *phones = [self.phoneArray componentsJoinedByString:@"|"];
-		phones = [[[[phones stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"(" withString:@""] stringByReplacingOccurrencesOfString:@")" withString:@""] stringByReplacingOccurrencesOfString:@"-" withString:@""];
-		[dict setObject:phones forKey:PHONE_STRING];
-	}
-	if (self.emailArray != nil)
-		[dict setObject:[self.emailArray componentsJoinedByString:@"|"] forKey:EMAIL_STRING];
-	if (self.addressArray != nil)
-		[dict setObject:[self.addressArray componentsJoinedByString:@"|"] forKey:ADDRESS_STRING];
-	if (self.smsArray != nil)
-		[dict setObject:[self.smsArray componentsJoinedByString:@"|"] forKey:SMS_STRING];
-	if (self.urlArray != nil)
-		[dict setObject:[self.urlArray componentsJoinedByString:@"|"] forKey:URL_STRING];
-	if (self.socialArray != nil)
-		[dict setObject:[self.socialArray componentsJoinedByString:@"|"] forKey:SOCIAL_STRING];
-	
 	return dict;
 }
 
