@@ -43,6 +43,8 @@
 
 #define IMAGE_STRING	@"Image"
 
+#define SOCIAL_STRING	@"Social Service"
+
 @implementation ABContact
 @synthesize record;
 
@@ -182,6 +184,8 @@
 	if (aProperty == kABPersonURLProperty) return URL_STRING;
 	if (aProperty == kABPersonRelatedNamesProperty) return RELATED_STRING;
 
+	if (aProperty == kABPersonSocialProfileProperty) return SOCIAL_STRING;
+
 	return nil;
 }
 
@@ -220,6 +224,7 @@
 	if (aProperty == kABPersonInstantMessageProperty) return YES;
 	if (aProperty == kABPersonURLProperty) return YES;
 	if (aProperty == kABPersonRelatedNamesProperty) return YES;
+	if (aProperty == kABPersonSocialProfileProperty) return YES;
 	 */
 }
 
@@ -265,6 +270,15 @@
 	if (service) [sms setObject:(NSString *) service forKey:(NSString *) kABPersonInstantMessageServiceKey];
 	if (userName) [sms setObject:userName forKey:(NSString *) kABPersonInstantMessageUsernameKey];
 	return sms;
+}
+
++ (NSDictionary *) socialWithService: (CFStringRef) service andUser: (NSString *) userName andUserIdentifier: (NSString *) userIdentifier
+{
+	NSMutableDictionary *social = [NSMutableDictionary dictionary];
+	if (service) [social setObject:(NSString *) service forKey:(NSString *) kABPersonSocialProfileServiceKey];
+	if (userName) [social setObject:userName forKey:(NSString *) kABPersonSocialProfileUsernameKey];
+	if (userIdentifier) [social setObject:userIdentifier forKey:(NSString *) kABPersonSocialProfileUserIdentifierKey];
+	return social;
 }
 
 // Thanks to Eridius for suggestions re: error
@@ -388,6 +402,8 @@
 - (NSArray *) addressLabels {return [self labelsForProperty:kABPersonAddressProperty];}
 - (NSArray *) smsArray {return [self arrayForProperty:kABPersonInstantMessageProperty];}
 - (NSArray *) smsLabels {return [self labelsForProperty:kABPersonInstantMessageProperty];}
+- (NSArray *) socialArray {return [self arrayForProperty:kABPersonSocialProfileProperty];}
+- (NSArray *) socialLabels {return [self labelsForProperty:kABPersonSocialProfileProperty];}
 
 - (NSString *) phonenumbers {return [self.phoneArray componentsJoinedByString:@" "];}
 - (NSString *) emailaddresses {return [self.emailArray componentsJoinedByString:@" "];}
@@ -443,6 +459,11 @@
 - (NSArray *) smsDictionaries
 {
 	return [self dictionaryArrayForProperty:kABPersonInstantMessageProperty];
+}
+
+- (NSArray *) socialDictionaries
+{
+	return [self dictionaryArrayForProperty:kABPersonSocialProfileProperty];
 }
 
 #pragma mark Setting Strings
@@ -586,6 +607,15 @@
 	// CFRelease(multi);
 }
 
+- (void) setSocialDictionaries: (NSArray *) dictionaries
+{
+	// kABWorkLabel, kABHomeLabel, kABOtherLabel, 
+	// ...
+	ABMutableMultiValueRef multi = [self createMultiValueFromArray:dictionaries withType:kABMultiDictionaryPropertyType];
+	[self setMulti:multi forProperty:kABPersonSocialProfileProperty];
+	// CFRelease(multi);
+}
+
 #pragma mark Images
 - (UIImage *) image
 {
@@ -658,6 +688,8 @@
 		[dict setObject:self.urlDictionaries forKey:URL_STRING];
 	if (self.relatedNameDictionaries != nil)
 		[dict setObject:self.relatedNameDictionaries forKey:RELATED_STRING];
+	if (self.socialDictionaries != nil)
+		[dict setObject:self.socialDictionaries forKey:SOCIAL_STRING];
 	
 	return dict;
 }
@@ -706,7 +738,9 @@
 	if (self.smsArray != nil)
 		[dict setObject:[self.smsArray componentsJoinedByString:@"|"] forKey:SMS_STRING];
 	if (self.urlArray != nil)
-		[dict setObject:self.urlArray forKey:URL_STRING];
+		[dict setObject:[self.urlArray componentsJoinedByString:@"|"] forKey:URL_STRING];
+	if (self.socialArray != nil)
+		[dict setObject:[self.socialArray componentsJoinedByString:@"|"] forKey:SOCIAL_STRING];
 	
 	return dict;
 }
@@ -762,6 +796,7 @@
 	if ([dict objectForKey:SMS_STRING]) contact.smsDictionaries = [dict objectForKey:SMS_STRING];
 	if ([dict objectForKey:URL_STRING]) contact.urlDictionaries = [dict objectForKey:URL_STRING];
 	if ([dict objectForKey:RELATED_STRING]) contact.relatedNameDictionaries = [dict objectForKey:RELATED_STRING];
+	if ([dict objectForKey:SOCIAL_STRING]) contact.socialDictionaries = [dict objectForKey:SOCIAL_STRING];
 
 	if ([dict objectForKey:IMAGE_STRING]) 
 	{

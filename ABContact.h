@@ -33,6 +33,7 @@
 						   withState:(NSString *) state withZip: (NSString *) zip
 						 withCountry: (NSString *) country withCode: (NSString *) code;
 + (NSDictionary *) smsWithService: (CFStringRef) service andUser: (NSString *) userName;
++ (NSDictionary *) socialWithService: (CFStringRef) service andUser: (NSString *) userName andUserIdentifier: (NSString *) userIdentifier;
 
 // Instance utility methods
 - (BOOL) removeSelfFromAddressBook: (NSError **) error;
@@ -84,6 +85,8 @@
 @property (nonatomic, readonly) NSArray *addressLabels;
 @property (nonatomic, readonly) NSArray *smsArray;
 @property (nonatomic, readonly) NSArray *smsLabels;
+@property (nonatomic, readonly) NSArray *socialArray;
+@property (nonatomic, readonly) NSArray *socialLabels;
 
 @property (nonatomic, readonly) NSString *emailaddresses;
 @property (nonatomic, readonly) NSString *phonenumbers;
@@ -97,6 +100,7 @@
 @property (nonatomic, assign) NSArray *dateDictionaries;
 @property (nonatomic, assign) NSArray *addressDictionaries;
 @property (nonatomic, assign) NSArray *smsDictionaries;
+@property (nonatomic, assign) NSArray *socialDictionaries;
 
 #pragma mark IMAGES
 @property (nonatomic, assign) UIImage *image;
