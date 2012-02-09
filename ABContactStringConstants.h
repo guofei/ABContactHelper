@@ -40,4 +40,4 @@
 
 #define IMAGE_STRING	@"Image"
 
-#define SOCIAL_STRING	@"Social Service"
+#define SOCIAL_STRING	@"Social Network"
