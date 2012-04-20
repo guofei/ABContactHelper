@@ -111,4 +111,6 @@
 	BOOL success = ABRecordSetValue(record, kABGroupNameProperty, (CFStringRef) aString, &error);
 	if (!success) NSLog(@"Error: %@", [(NSError *)error localizedDescription]);
 }
+
+
 @end

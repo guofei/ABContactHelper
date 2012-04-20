@@ -6,6 +6,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ABContactsHelper.h"
+#import "VCard.h"
+
 
 #define COOKBOOK_PURPLE_COLOR	[UIColor colorWithRed:0.20392f green:0.19607f blue:0.61176f alpha:1.0f]
 #define BARBUTTON(TITLE, SELECTOR) 	[[[UIBarButtonItem alloc] initWithTitle:TITLE style:UIBarButtonItemStylePlain target:self action:SELECTOR] autorelease]
@@ -106,6 +108,9 @@
 	[relatedarray addObject:[ABContact dictionaryWithValue:@"Augustine Washington" andLabel:kABPersonFatherLabel]];
 	 peep.relatedNameDictionaries = relatedarray;
 	
+  NSString *test = [VCard generateVCardStringWithRec: peep.record];
+  NSLog(@"########%s %@", __FUNCTION__, test);
+  
 	NSError *error;
 	if (![ABContactsHelper addContact:peep withError:&error]) // save to address book
 		NSLog(@"Error: %@", [error localizedDescription]);
@@ -197,12 +202,14 @@
 	
 	ABContact *contact = [ABContact contactWithData:data];
 	CFShow([contact dictionaryRepresentation]);
+  
 }
 
 - (void) viewDidLoad
 {
 	self.navigationController.navigationBar.tintColor = COOKBOOK_PURPLE_COLOR;
 	
+    
 	// BASIC TEST
 	// self.navigationItem.rightBarButtonItem = BARBUTTON(@"Add GW", @selector(addGW));
 	// self.navigationItem.leftBarButtonItem = BARBUTTON(@"Scan", @selector(scan));

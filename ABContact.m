@@ -7,6 +7,7 @@
 #import "ABContact.h"
 #import "ABContactsHelper.h"
 #import "ABContactStringConstants.h"
+#import "Base64.h"
 
 #define CFAutorelease(obj) ({CFTypeRef _obj = (obj); (_obj == NULL) ? NULL : [(id)CFMakeCollectable(_obj) autorelease]; })
 
@@ -609,6 +610,45 @@
 	if (!success) NSLog(@"Error: %@", [(NSError *)error localizedDescription]);
 }
 
+- (NSData *)imageData
+{
+	if (!ABPersonHasImageData(record)) return nil;
+	NSData *imageData = (NSData *)ABPersonCopyImageData(record);
+	return [imageData autorelease];
+}
+
+- (void) setImageData: (NSData *) data
+{
+	[self setImage:[UIImage imageWithData:data]];
+}
+
+
+- (UIImage *) thumb
+{
+	if (!ABPersonHasImageData(record)) return nil;
+	CFDataRef imageData = ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatThumbnail);
+	UIImage *image = [UIImage imageWithData:(NSData *) imageData];
+	CFRelease(imageData);
+	return image;
+}
+
+- (void) setThumb: (UIImage *) image
+{
+	[self setImage:image];
+}
+
+- (NSData *)thumbData
+{
+	if (!ABPersonHasImageData(record)) return nil;
+	NSData *imageData = (NSData *)ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatThumbnail);
+	return [imageData autorelease];
+}
+
+- (void) setThumbData: (NSData *) data
+{
+	[self setThumb:[UIImage imageWithData:data]];
+}
+
 #pragma mark Representations
 
 // No Image
@@ -751,4 +791,5 @@
 	
 	return [self contactWithDictionary:dict];
 }
+
 @end

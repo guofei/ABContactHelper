@@ -104,6 +104,9 @@
 
 #pragma mark IMAGES
 @property (nonatomic, assign) UIImage *image;
+@property (nonatomic, assign) UIImage *thumb;
+@property (nonatomic, assign) NSData *imageData;
+@property (nonatomic, assign) NSData *thumbData;
 
 #pragma mark REPRESENTATIONS
 
